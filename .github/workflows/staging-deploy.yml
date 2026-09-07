@@ -68,6 +68,25 @@ jobs:
         working-directory: swisseph-zig
         run: zig build wasm
 
+      - name: Fetch ephe + build era packs
+        working-directory: engine
+        run: |
+          mkdir -p "$RUNNER_TEMP/ephe"
+          for f in sepl_18.se1 semo_18.se1 seas_18.se1; do
+            curl -fsSL "https://github.com/aloistr/swisseph/raw/master/ephe/$f" -o "$RUNNER_TEMP/ephe/$f"
+          done
+          EPHE_DIR="$RUNNER_TEMP/ephe" node tools/make-packs.mjs
+
+      - name: Build citydb (GeoNames cities1000, cached)
+        working-directory: engine
+        run: |
+          mkdir -p /tmp/geonames
+          if [ ! -f /tmp/geonames/cities1000.txt ]; then
+            curl -sSL -o /tmp/geonames/cities1000.zip https://download.geonames.org/export/dump/cities1000.zip
+            unzip -o /tmp/geonames/cities1000.zip -d /tmp/geonames
+          fi
+          node tools/citydb-build.mjs --in /tmp/geonames/cities1000.txt --out citydb/out
+
       - name: Link engine artifacts
         working-directory: web
         env:
