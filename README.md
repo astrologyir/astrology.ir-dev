@@ -17,15 +17,22 @@ staging URL is the Pages URL of this repo.
 `repository_dispatch` with type `staging-deploy`, so the live `web` CI can
 trigger a staging rebuild after a release).
 
-### Required secret
+### Required secrets
 
 | Secret          | Scope                                  | Purpose                                            |
 | --------------- | -------------------------------------- | -------------------------------------------------- |
-| `ENGINE_TOKEN`  | `astrologyir/astrology.ir-dev` (secrets) | PAT with `Contents: read` on `astrologyir/engine` and `astrologyir/web` |
+| `ENGINE_TOKEN`  | `astrologyir/astrology.ir-dev` (secrets) | Fine-grained PAT, `Contents: read` on `astrologyir/engine` only |
+| `WEB_TOKEN`     | `astrologyir/astrology.ir-dev` (secrets) | Fine-grained PAT, `Contents: read` on `astrologyir/web` only |
 
-The default `GITHUB_TOKEN` cannot cross into the private repos (cross-owner
-restriction), so a PAT is mandatory. Create it at
+A single token cannot cover both — the repos are separate installations of
+the fine-grained PAT. The default `GITHUB_TOKEN` cannot cross into the private
+repos (cross-owner restriction), so both PATs are mandatory. Create them at
 `https://github.com/astrologyir/astrology.ir-dev/settings/secrets/actions`.
+
+If `WEB_TOKEN` is missing the web checkout fails immediately (no fallback —
+the bundle is an engine artifact, not a web source). If `ENGINE_TOKEN` is
+missing the engine checkout falls back to the committed `vendor/engine.bundle`
+in the web repo (292 KB git bundle, full main history).
 
 ### Manual trigger
 
