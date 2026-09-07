@@ -16,6 +16,9 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout self
+        uses: actions/checkout@v5
+
       - name: Checkout web
         uses: actions/checkout@v5
         with:
