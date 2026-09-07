@@ -27,12 +27,20 @@ jobs:
           token: ${{ secrets.ENGINE_TOKEN }}
           path: web
 
-      - name: Checkout engine
+      - name: Checkout engine (sibling layout)
+        id: engine
         uses: actions/checkout@v5
         with:
           repository: astrologyir/engine
           token: ${{ secrets.ENGINE_TOKEN }}
           path: engine
+        continue-on-error: true
+
+      - name: Unbundle engine fallback
+        if: steps.engine.outcome != 'success'
+        run: |
+          rm -rf engine
+          git clone --branch main web/vendor/engine.bundle engine
 
       - name: Setup Node
         uses: actions/setup-node@v5
