@@ -1,0 +1,84 @@
+name: Staging Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  repository_dispatch:
+    types: [staging-deploy]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: staging-deploy
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout web
+        uses: actions/checkout@v5
+        with:
+          repository: astrologyir/web
+          token: ${{ secrets.ENGINE_TOKEN }}
+          path: web
+
+      - name: Checkout engine
+        uses: actions/checkout@v5
+        with:
+          repository: astrologyir/engine
+          token: ${{ secrets.ENGINE_TOKEN }}
+          path: engine
+
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - name: Install web deps
+        working-directory: web
+        run: npm ci
+
+      - name: Build swisseph-zig wasm
+        uses: actions/checkout@v5
+        with:
+          repository: mshafiee/swisseph-zig
+          ref: v2.10.3-rc2
+          path: swisseph-zig
+
+      - name: Install zig
+        uses: mlugg/setup-zig@v1
+        with:
+          version: 0.16.0
+
+      - name: Build swe.wasm
+        working-directory: swisseph-zig
+        run: zig build wasm
+
+      - name: Link engine artifacts
+        working-directory: web
+        env:
+          ENGINE_DIR: ${{ github.workspace }}/engine
+        run: |
+          mkdir -p ../engine/vendor
+          cp ../swisseph-zig/zig-out/wasm/swe.wasm ../engine/vendor/swe.wasm
+          node tools/link-engine.mjs || true
+          node tools/link-citydb.mjs || true
+
+      - name: Build web
+        working-directory: web
+        run: npm run build
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: web/build
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
