@@ -84,6 +84,9 @@ jobs:
           BASE_PATH: /astrology.ir-dev
         run: npm run build
 
+      - name: SPA fallback for GitHub Pages deep links
+        run: cp web/build/index.html web/build/404.html
+
       - name: Deploy build output to gh-pages
         uses: peaceiris/actions-gh-pages@v4
         with:
