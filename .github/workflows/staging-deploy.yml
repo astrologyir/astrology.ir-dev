@@ -1,16 +1,12 @@
 name: Staging Deploy
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
   repository_dispatch:
     types: [staging-deploy]
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
   group: staging-deploy
@@ -83,10 +79,13 @@ jobs:
         working-directory: web
         run: npm run build
 
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: web/build
-
-      - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v4
+      - name: Commit and push build output
+        run: |
+          git config user.name "astrologyir-bot"
+          git config user.email "bot@astrology.ir"
+          rm -rf build
+          cp -r web/build build
+          touch .nojekyll
+          git add -A
+          git commit -m "deploy: staging build ${{ github.sha }}" || echo "nothing to commit"
+          git push origin main
