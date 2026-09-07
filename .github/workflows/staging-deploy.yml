@@ -78,8 +78,10 @@ jobs:
           node tools/link-engine.mjs || true
           node tools/link-citydb.mjs || true
 
-      - name: Build web
+      - name: Build web (Pages project subpath)
         working-directory: web
+        env:
+          BASE_PATH: /astrology.ir-dev
         run: npm run build
 
       - name: Deploy build output to gh-pages
