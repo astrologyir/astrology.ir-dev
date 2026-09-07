@@ -111,8 +111,14 @@ jobs:
           BASE_PATH: /astrology.ir-dev
         run: npm run build
 
-      - name: SPA fallback for GitHub Pages deep links
-        run: cp web/build/index.html web/build/404.html
+      - name: SPA fallback + per-deploy SW cache version
+        run: |
+          cp web/build/index.html web/build/404.html
+          # VERSION keys the service worker's Cache API storage; a unique
+          # value per deploy makes activate() evict every stale cache, so
+          # returning browsers always get the fresh vendor artifacts
+          # (cache-first vendor strategy otherwise serves them forever).
+          sed -i "s/^const VERSION = .*/const VERSION = 'staging-${GITHUB_SHA}';/" web/build/sw.js
 
       - name: Deploy build output to gh-pages
         uses: peaceiris/actions-gh-pages@v4
