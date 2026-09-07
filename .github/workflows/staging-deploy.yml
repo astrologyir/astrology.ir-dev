@@ -82,16 +82,16 @@ jobs:
         working-directory: web
         run: npm run build
 
-      - name: Commit and push build output
+      - name: Deploy build output to gh-pages
         run: |
           git config user.name "astrologyir-bot"
           git config user.email "bot@astrology.ir"
-          mkdir -p /tmp/stage
-          cp -r web/build/* /tmp/stage/
-          rm -rf build engine web swisseph-zig .zig-cache
-          mkdir build
-          cp -r /tmp/stage/* build/
+          git fetch origin gh-pages --depth=1 || echo "no gh-pages yet"
+          git checkout -B gh-pages origin/gh-pages 2>/dev/null || git checkout --orphan gh-pages
+          git rm -rf --ignore-unmatch . >/dev/null 2>&1 || true
+          mkdir -p build
+          cp -r web/build/* build/
           touch .nojekyll
-          git add -A
+          git add build .nojekyll
           git commit -m "deploy: staging build ${{ github.sha }}" || echo "nothing to commit"
-          git push origin main
+          git push origin gh-pages
