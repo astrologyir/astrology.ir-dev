@@ -86,8 +86,9 @@ jobs:
         run: |
           git config user.name "astrologyir-bot"
           git config user.email "bot@astrology.ir"
-          rm -rf build
-          cp -r web/build build
+          rm -rf build engine web swisseph-zig .zig-cache
+          mkdir build
+          cp -r web/build/* build/
           touch .nojekyll
           git add -A
           git commit -m "deploy: staging build ${{ github.sha }}" || echo "nothing to commit"
