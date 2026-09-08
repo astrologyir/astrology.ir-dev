@@ -4,6 +4,10 @@ on:
   workflow_dispatch:
   repository_dispatch:
     types: [staging-deploy]
+  # Fallback when web CI cannot dispatch cross-repo (no STAGING_DISPATCH
+  # PAT): a nightly rebuild keeps staging current with web/engine main.
+  schedule:
+    - cron: '0 3 * * *'
 
 permissions:
   contents: write
