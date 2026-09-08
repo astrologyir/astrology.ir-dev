@@ -1,1 +1,0 @@
-import{S as e,b as t,p as n}from"../chunks/yvSfEKZd.js";import"../chunks/xihTtKlq.js";import"../chunks/D1ZHBEML.js";var r=e(`<meta http-equiv="refresh" content="0; url=/portal"/>`),i=e(`<p class="p-4 text-sm text-muted"><a class="underline" href="/portal">open the portal</a></p>`);function a(e){var a=i();n(`1uha8ag`,e=>{var n=r();t(e,n)}),t(e,a)}export{a as component};
