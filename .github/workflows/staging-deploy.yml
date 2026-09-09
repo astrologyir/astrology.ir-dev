@@ -85,9 +85,9 @@ jobs:
         working-directory: engine
         run: |
           mkdir -p /tmp/geonames
-          if [ ! -f /tmp/geonames/cities1000.txt ]; then
-            curl -sSL -o /tmp/geonames/cities1000.zip https://download.geonames.org/export/dump/cities1000.zip
-            unzip -o /tmp/geonames/cities1000.zip -d /tmp/geonames
+          if [ ! -f /tmp/geonames/cities500.txt ]; then
+            curl -sSL -o /tmp/geonames/cities500.zip https://download.geonames.org/export/dump/cities500.zip
+            unzip -o /tmp/geonames/cities500.zip -d /tmp/geonames
           fi
           # alternates: per-locale display names + non-latin search tokens
           # (arabic shard — برلین/تهران). ~270 MB zip; streamed by the
@@ -96,7 +96,7 @@ jobs:
             curl -sSL -o /tmp/geonames/alternateNamesV2.zip https://download.geonames.org/export/dump/alternateNamesV2.zip
             unzip -o /tmp/geonames/alternateNamesV2.zip -d /tmp/geonames
           fi
-          node tools/citydb-build.mjs --in /tmp/geonames/cities1000.txt \
+          node tools/citydb-build.mjs --in /tmp/geonames/cities500.txt \
             --alternates /tmp/geonames/alternateNamesV2.txt --out citydb/out
 
       - name: Link engine artifacts
