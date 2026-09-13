@@ -1,0 +1,1 @@
+import{q as e}from"./5JonDQOM.js";var t=()=>`Astrology Engine`,n=()=>`موتور اخترشناسی`,r=()=>`محرك الفلك`,i=()=>`Moteur d'astronomie`,a=()=>`Astronomie-Engine`,o=()=>`Motor astronómico`,s=((s={},c={})=>{let l=c.locale??e();return l===`fa`?n(s):l===`ar`?r(s):l===`fr`?i(s):l===`de`?a(s):l===`es`?o(s):t(s)});export{s as t};

@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f7f8f4" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#121a16" media="(prefers-color-scheme: dark)" />
+    <link rel="manifest" href="/astrology.ir-dev/manifest.webmanifest" />
+    <link rel="icon" href="/astrology.ir-dev/favicon.svg" type="image/svg+xml" />
+    <!-- No font preloads: @font-face urls resolve to hashed _app assets,
+         so preloading the static/ copies would double-fetch. Faces load on
+         first use via unicode-range + font-display: swap. -->
+    <script>
+      // Boot script (plan §14.10, taghvim PREFERENCES_BOOT_SCRIPT):
+      // re-apply stored settings BEFORE first paint — no dark-mode
+      // flash. Mirrors lib/design/preferences.ts parse rules; keep the
+      // two in sync (validated enums, defaults on unknown).
+      (function () {
+        try {
+          var get = function (k, options, dflt) {
+            var v = null;
+            try { v = localStorage.getItem(k); } catch (e) {}
+            return options.indexOf(v) >= 0 ? v : dflt;
+          };
+          var theme = get('air.theme', ['auto', 'light', 'dark'], 'auto');
+          var size = get('air.size', ['sm', 'md', 'lg'], 'md');
+          var font = get('air.font', ['vazirmatn', 'shabnam', 'sahel', 'system'], 'vazirmatn');
+          var html = document.documentElement;
+          if (theme === 'auto') html.removeAttribute('data-theme');
+          else html.setAttribute('data-theme', theme);
+          html.setAttribute('data-size', size);
+          html.setAttribute('data-font', font);
+          // Palette pre-paint: forest = attribute absent (keep in sync
+          // with lib/design/preferences.ts PALETTES/DEFAULTS.palette).
+          var palette = get('air.palette', ['night', 'sepia'], null);
+          if (palette) html.setAttribute('data-palette', palette);
+          else html.removeAttribute('data-palette');
+          // Language pre-paint (§8 detection chain: saved → browser → en).
+          // Inline mirror of lib/locales.mjs detectLocale; keep in sync.
+          var LOCALES = ['fa', 'ar', 'en', 'fr', 'de', 'es'];
+          var loc = get('air.locale', LOCALES, null);
+          if (!loc) {
+            var tags = (navigator.languages && navigator.languages.length)
+              ? navigator.languages
+              : (navigator.language ? [navigator.language] : []);
+            for (var i = 0; i < tags.length; i++) {
+              var tag = String(tags[i]).toLowerCase();
+              if (LOCALES.indexOf(tag) >= 0) { loc = tag; break; }
+              var base = tag.split('-')[0];
+              if (LOCALES.indexOf(base) >= 0) { loc = base; break; }
+            }
+          }
+          loc = loc || 'en';
+          html.setAttribute('lang', loc);
+          html.setAttribute('dir', loc === 'fa' || loc === 'ar' ? 'rtl' : 'ltr');
+        } catch (e) {
+          /* defaults come from tokens.css :root */
+        }
+      })();
+    </script>
+    <link href="/astrology.ir-dev/_app/immutable/entry/start.xyQfUUoj.js" rel="modulepreload">
+		<link href="/astrology.ir-dev/_app/immutable/chunks/hLGV0VDR.js" rel="modulepreload">
+		<link href="/astrology.ir-dev/_app/immutable/chunks/VXj_Gyzi.js" rel="modulepreload">
+		<link href="/astrology.ir-dev/_app/immutable/chunks/DnRcowPl.js" rel="modulepreload">
+		<link href="/astrology.ir-dev/_app/immutable/entry/app.DSMwsiK9.js" rel="modulepreload">
+		<link href="/astrology.ir-dev/_app/immutable/chunks/xihTtKlq.js" rel="modulepreload">
+		<link href="/astrology.ir-dev/_app/immutable/nodes/0.C-JSYgiv.js" rel="modulepreload">
+		<link href="/astrology.ir-dev/_app/immutable/chunks/5JonDQOM.js" rel="modulepreload">
+		<link href="/astrology.ir-dev/_app/immutable/chunks/BFephMX-.js" rel="modulepreload">
+		<link href="/astrology.ir-dev/_app/immutable/chunks/CKaBYnAM.js" rel="modulepreload">
+		<link href="/astrology.ir-dev/_app/immutable/chunks/Cmw2LACJ.js" rel="modulepreload">
+		
+		<link href="/astrology.ir-dev/_app/immutable/assets/0.MQ8vV8E3.css" rel="stylesheet">
+  </head>
+  <body data-sveltekit-preload-data="hover">
+    <div style="display: contents">
+			<script>
+				{
+					__sveltekit_a2lg9n = {
+						base: "/astrology.ir-dev",
+						assets: "/astrology.ir-dev"
+					};
+
+					const element = document.currentScript.parentElement;
+
+					Promise.all([
+						import("/astrology.ir-dev/_app/immutable/entry/start.xyQfUUoj.js"),
+						import("/astrology.ir-dev/_app/immutable/entry/app.DSMwsiK9.js")
+					]).then(([kit, app]) => {
+						kit.start(app, element);
+					});
+				}
+			</script>
+		</div>
+  </body>
+</html>
