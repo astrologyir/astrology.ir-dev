@@ -1,0 +1,1 @@
+import{m as e}from"./BiHaaf0D.js";var t=()=>`planet`,n=()=>`سیاره`,r=()=>`سیاره`,i=()=>`الكوكب`,a=()=>`planète`,o=()=>`Planet`,s=()=>`planeta`,c=((c={},l={})=>{let u=l.locale??e();return u===`fa`?n(c):u===`fa-x-sare`?r(c):u===`ar`?i(c):u===`fr`?a(c):u===`de`?o(c):u===`es`?s(c):t(c)});export{c as t};
