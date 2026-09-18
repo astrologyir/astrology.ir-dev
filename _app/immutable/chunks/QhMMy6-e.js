@@ -1,0 +1,1 @@
+import"./BTQRtWLU.js";var e=()=>`Art`,t=((t={},n={})=>(n.locale!==void 0&&n.locale!==`de`&&console.warn(`Paraglide: options.locale cannot override a locale-specialized client bundle; use a full document navigation to switch locales.`),e(t)));export{t};
